@@ -1,0 +1,36 @@
+{
+  "name": "dcs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/test.js",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastiankr/dcs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebastiankr/dcs/issues"
+  },
+  "homepage": "https://github.com/sebastiankr/dcs#readme",
+  "dependencies": {
+    "hapi": "^13.4.1",
+    "hapi-swagger": "^6.1.0",
+    "inert": "^4.0.0",
+    "joi": "^8.4.2",
+    "lodash": "^4.13.1",
+    "mssql": "^3.3.0",
+    "vision": "^4.1.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
+    "should": "^9.0.2",
+    "supertest": "^1.2.0"
+  }
+}
