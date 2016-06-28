@@ -15,11 +15,11 @@ server.connection({ port: 3000 })
 var config = {
   user: 'mode',
   password: '',
-  server: 'mode.database.windows.net', // You can use 'localhost\\instance' to connect to named instance
+  server: 'mode.database.windows.net', 
   database: 'pmos',
 
   options: {
-    encrypt: true // Use this if you're on Windows Azure
+    encrypt: true // Use this for Windows Azure
   }
 }
 
