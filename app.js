@@ -81,7 +81,7 @@ server.route({
     handler: function (request, reply) {
       sql.connect(config.db).then(function () {
         new sql.Request()
-          .input('input_parameter', sql.NVarChar(200), request.payload.category)
+          .input('category', sql.NVarChar(200), request.payload.category)
           .query('insert into Valid_Category (category) values (@category)')
           .then(function (recordset) {
             console.dir(recordset)
