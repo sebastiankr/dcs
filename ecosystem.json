@@ -8,7 +8,7 @@
     {
       "name": "dcs",
       "script": "app.js",
-      "instances": 4,
+      "instances": 1,
       "autorestart": true,
       "restart_delay": 5000,
       "env": {
