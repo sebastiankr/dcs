@@ -1,0 +1,46 @@
+{
+    /**
+   * Application configuration section
+   * http://pm2.keymetrics.io/docs/usage/application-declaration/
+   */
+    "apps": [
+        // First application
+        {
+            "name": "dcs",
+            "script": "app.js",
+            "instances": 1,
+            "autorestart": true,
+            "restart_delay": 5000,
+            "env": {
+                "NODE_ENV": "production"
+            },
+            "env_production": {
+            },
+            "env_demo": {
+            }
+        }
+    ],
+    /**
+   * Deployment section
+   * http://pm2.keymetrics.io/docs/usage/deployment/
+   */
+    "deploy": {
+        "production": {
+            "user": "root",
+            "host": "pmos.cloudapp.net",
+            "ref": "origin/master",
+            "repo": "https://github.com/sebastiankr/dcs.git",
+            "path": "/var/pm2/dcs",
+            "post-deploy": "npm install --production && pm2 startOrRestart ecosystem.json --env production"
+        },
+        "test": {
+            "user": "ec2-user",
+            "host": "ec2-52-200-41-222.compute-1.amazonaws.com",
+            "key": "../keys/infrastructure.pem",
+            "ref": "origin/master",
+            "repo": "ssh://git@sshtash.difference-engine.com:7999/dean/event-aggregator.git",
+            "path": "/var/dean/event-aggregator",
+            "post-deploy": "npm install --production && pm2 startOrRestart ecosystem.json --env demo"
+        }
+    }
+}
