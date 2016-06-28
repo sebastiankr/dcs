@@ -12,16 +12,7 @@ const _ = require('lodash')
 const server = new Hapi.Server()
 server.connection({ port: 3000 })
 
-var config = {
-  user: 'mode',
-  password: process.env.DCS_PW,
-  server: 'mode.database.windows.net', 
-  database: 'pmos',
-
-  options: {
-    encrypt: true // Use this for Windows Azure
-  }
-}
+var config = require('./config.json')[process.env.NODE_ENV || 'dev']
 
 server.route({
   method: 'GET',
@@ -45,7 +36,7 @@ server.route({
       params: {
         input: Joi.number()
           .required()
-          .description('the input data to be cleaned'),
+          .description('the input data to be cleaned')
       }
     }
   }
@@ -56,18 +47,20 @@ server.route({
   path: '/v1/valid-category',
   config: {
     handler: function (request, reply) {
-      sql.connect(config).then(function () {
+      sql.connect(config.db).then(function () {
         new sql.Request()
           .query('select [category] from Valid_Category')
           .then(function (recordset) {
             console.dir(recordset)
             return reply(recordset.map((x) => {
-              return x.category}))
-          }).catch(function (err) {
-          // query error checks
-          console.error(err)
-          return reply(new Error(err.message))
-        })
+              return x.category
+            }))
+          })
+          .catch(function (err) {
+            // query error checks
+            console.error(err)
+            return reply(new Error(err.message))
+          })
       }).catch(function (err) {
         // sql connection error checks
         console.error(err)
@@ -86,19 +79,21 @@ server.route({
   path: '/v1/valid-category',
   config: {
     handler: function (request, reply) {
-      sql.connect(config).then(function () {
+      sql.connect(config.db).then(function () {
         new sql.Request()
           .input('input_parameter', sql.NVarChar(200), request.payload.category)
           .query('insert into Valid_Category (category) values (@category)')
           .then(function (recordset) {
             console.dir(recordset)
             return reply(recordset.map((x) => {
-              return x.category}))
-          }).catch(function (err) {
-          // query error checks
-          console.error(err)
-          return reply(new Error(err.message))
-        })
+              return x.category
+            }))
+          })
+          .catch(function (err) {
+            // query error checks
+            console.error(err)
+            return reply(new Error(err.message))
+          })
       }).catch(function (err) {
         // sql connection error checks
         console.error(err)
@@ -112,7 +107,7 @@ server.route({
       payload: {
         category: Joi.string().alphanum().min(1).max(200)
           .required()
-          .description('the name for the category'),
+          .description('the name for the category')
       }
     },
     response: { schema: Joi.boolean() }
@@ -154,7 +149,7 @@ server.register([
     options: {
       info: {
         title: 'Data Cleaning Service API Documentation',
-        version: Pack.version,
+        version: Pack.version
       },
       basePath: '/v1'
     }
