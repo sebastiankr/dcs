@@ -14,7 +14,7 @@ server.connection({ port: 3000 })
 
 var config = {
   user: 'mode',
-  password: '',
+  password: process.env.DCS_PW,
   server: 'mode.database.windows.net', 
   database: 'pmos',
 
