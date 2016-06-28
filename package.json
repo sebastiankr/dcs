@@ -2,11 +2,11 @@
   "name": "dcs",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha test/test.js",
-    "start": "node server.js",
-    "watch": "nodemon server.js"
+    "start": "node app.js",
+    "watch": "nodemon app.js"
   },
   "repository": {
     "type": "git",
