@@ -1,0 +1,24 @@
+{
+  "production": {
+    "db": {
+      "user": "mode",
+      "password": "",
+      "server": "mode.database.windows.net",
+      "database": "pmos",
+      "options": {
+        "encrypt": true
+      }
+    }
+  },
+  "dev": {
+    "db": {
+      "user": "mode",
+      "password": "",
+      "server": "mode.database.windows.net",
+      "database": "pmos",
+      "options": {
+        "encrypt": true
+      }
+    }
+  }
+}
