@@ -26,3 +26,9 @@ ALTER TABLE [Category_Pair]
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
+
+INSERT INTO Valid_Category (category) VALUES ('PERSON')
+INSERT INTO Valid_Category (category) VALUES ('PLACE')
+INSERT INTO Valid_Category (category) VALUES ('ANIMAL')
+INSERT INTO Valid_Category (category) VALUES ('COMPUTER')
+INSERT INTO Valid_Category (category) VALUES ('OTHER')
