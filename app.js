@@ -27,17 +27,78 @@ server.route({
   path: '/v1/clean-data',
   config: {
     handler: function (request, reply) {
-      reply('Hello, ' + encodeURIComponent(request.params.input) + '!')
+      sql.connect(config.db).then(function () {
+        new sql.Request()
+          .query('select [category] from Valid_Category')
+          .then(function (recordset) {
+            const validCategories = recordset.map((x) => {
+              return x.category
+            })
+            const outputData = []
+            const countData = {}
+            request.payload.inputdata.map((x) => {
+              if (_.includes(validCategories, x.category)) {
+                if (!_.find(outputData, (y) => {
+                    return x.category === y.category && x.subcategory === y.subcategory
+                  })) {
+                  outputData.push(x)
+                  if (countData[x.category]) {
+                    countData[x.category]++
+                  } else {
+                    countData[x.category] = 1
+                  }
+                }
+              }
+            })
+
+            let result = {
+              output: outputData,
+              count: []
+            }
+            _.forEach(countData, (value, key) => {
+              result.count.push({ category: key, count: value })
+            })
+            return reply(result)
+          })
+          .catch(function (err) {
+            // query error checks
+            console.error(err)
+            return reply(new Error(err.message))
+          })
+      }).catch(function (err) {
+        // sql connection error checks
+        console.error(err)
+        return reply(new Error(err.message))
+      })
     },
     description: 'Cleans category pair input data',
     notes: 'Removes dublicates category pairs and pairs with a non-valid category. Returns cleaned result and a count of entries.',
     tags: ['api'],
     validate: {
-      params: {
-        input: Joi.number()
+      payload: {
+        inputdata: Joi.array().items(Joi.object().keys({
+          category: Joi.string().alphanum().min(1).max(200),
+          subcategory: Joi.string().alphanum().min(1).max(200)
+        }))
           .required()
           .description('the input data to be cleaned')
       }
+    },
+    response: {
+      schema: Joi.object().keys({
+        output: Joi.array().items(
+          Joi.object().keys({
+            category: Joi.string().alphanum().min(1).max(200),
+            subcategory: Joi.string().alphanum().min(1).max(200)
+          })
+        ),
+        count: Joi.array().items(
+          Joi.object().keys({
+            category: Joi.string().alphanum().min(1).max(200),
+            count: Joi.number()
+          })
+        )
+      })
     }
   }
 })
@@ -51,7 +112,6 @@ server.route({
         new sql.Request()
           .query('select [category] from Valid_Category')
           .then(function (recordset) {
-            console.dir(recordset)
             return reply(recordset.map((x) => {
               return x.category
             }))
@@ -84,15 +144,12 @@ server.route({
           .input('category', sql.NVarChar(200), request.payload.category)
           .query('insert into Valid_Category (category) values (@category)')
           .then(function (recordset) {
-            console.dir(recordset)
-            return reply(recordset.map((x) => {
-              return x.category
-            }))
+            return reply(true)
           })
           .catch(function (err) {
             // query error checks
             console.error(err)
-            return reply(new Error(err.message))
+            return reply(false)
           })
       }).catch(function (err) {
         // sql connection error checks
@@ -119,13 +176,23 @@ server.route({
   path: '/v1/valid-category/{category}',
   config: {
     handler: function (request, reply) {
-      console.log(request.params.category)
-      // delete vaild-category
-      if (true) {
-        reply(true)
-      } else {
-        reply(false)
-      }
+      sql.connect(config.db).then(function () {
+        new sql.Request()
+          .input('category', sql.NVarChar(200), request.params.category)
+          .query('delete from Valid_Category WHERE category = @category')
+          .then(function (recordset) {
+            return reply(true)
+          })
+          .catch(function (err) {
+            // query error checks
+            console.error(err)
+            return reply(false)
+          })
+      }).catch(function (err) {
+        // sql connection error checks
+        console.error(err)
+        return reply(new Error(err.message))
+      })
     },
     description: 'Deletes a valid category',
     notes: 'Deletion happens is the central database. Returns a boolean indicating the success of the deletion',
@@ -134,7 +201,7 @@ server.route({
       params: {
         category: Joi.string().alphanum().min(1).max(200)
           .required()
-          .description('the name for the category to be deleted'),
+          .description('the name for the category to be deleted')
       }
     },
     response: { schema: Joi.boolean() }
