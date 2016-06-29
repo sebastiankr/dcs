@@ -77,8 +77,8 @@ server.route({
     validate: {
       payload: {
         inputdata: Joi.array().items(Joi.object().keys({
-          category: Joi.string().alphanum().min(1).max(200),
-          subcategory: Joi.string().alphanum().min(1).max(200)
+          category: Joi.string().min(1).max(200),
+          subcategory: Joi.string().min(1).max(200)
         }))
           .required()
           .description('the input data to be cleaned')
@@ -88,13 +88,13 @@ server.route({
       schema: Joi.object().keys({
         output: Joi.array().items(
           Joi.object().keys({
-            category: Joi.string().alphanum().min(1).max(200),
-            subcategory: Joi.string().alphanum().min(1).max(200)
+            category: Joi.string().min(1).max(200),
+            subcategory: Joi.string().min(1).max(200)
           })
         ),
         count: Joi.array().items(
           Joi.object().keys({
-            category: Joi.string().alphanum().min(1).max(200),
+            category: Joi.string().min(1).max(200),
             count: Joi.number()
           })
         )
@@ -130,7 +130,7 @@ server.route({
     description: 'Lists all valid categories',
     notes: 'Items with non-valid categories are removed ftrom input data.',
     tags: ['api'],
-    response: {schema: Joi.array().items(Joi.string().alphanum().min(1).max(200))}
+    response: {schema: Joi.array().items(Joi.string().min(1).max(200))}
   }
 })
 
@@ -158,11 +158,11 @@ server.route({
       })
     },
     description: 'Adds a valid category',
-    notes: 'Category must be alfanumeric and have from one to max. 200 characters. The category is persisted in the central database.',
+    notes: 'Category must be a string and have from one to max. 200 characters. The category is persisted in the central database.',
     tags: ['api'],
     validate: {
       payload: {
-        category: Joi.string().alphanum().min(1).max(200)
+        category: Joi.string().min(1).max(200)
           .required()
           .description('the name for the category')
       }
@@ -199,7 +199,7 @@ server.route({
     tags: ['api'],
     validate: {
       params: {
-        category: Joi.string().alphanum().min(1).max(200)
+        category: Joi.string().min(1).max(200)
           .required()
           .description('the name for the category to be deleted')
       }

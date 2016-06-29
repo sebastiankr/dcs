@@ -72,17 +72,6 @@ describe('POST valid-category', function () {
 })
 
 describe('DELETE valid-category', function () {
-  it('should return validation error when deleting empty category', function (done) {
-    server
-      .del('/v1/valid-category/%20')
-      .query({ category: ' ' })
-      .expect('Content-type', /json/)
-      .expect(400)
-      .end(function (err, res) {
-        res.status.should.equal(400)
-        done()
-      })
-  })
   it('should return true when deleting test_category', function (done) {
     server
       .del('/v1/valid-category/TESTCATEGORY')
@@ -100,11 +89,11 @@ describe('DELETE valid-category', function () {
 
 describe('POST clean-data', function () {
   const testInputData = [
-    {category: 'PERSON', subcategory: 'BobJones'},
+    {category: 'PERSON', subcategory: 'Bob Jones'},
     {category: 'PLACE', subcategory: 'Washington'},
     {category: 'PERSON', subcategory: 'Mary'},
     {category: 'COMPUTER', subcategory: 'Mac'},
-    {category: 'PERSON', subcategory: 'BobJones'},
+    {category: 'PERSON', subcategory: 'Bob Jones'},
     {category: 'OTHER', subcategory: 'Tree'},
     {category: 'ANIMAL', subcategory: 'Dog'},
     {category: 'PLACE', subcategory: 'Texas'},
@@ -113,7 +102,7 @@ describe('POST clean-data', function () {
     {category: 'PERSON', subcategory: 'Mac'}
   ]
   const outputData = [
-    {category: 'PERSON', subcategory: 'BobJones'},
+    {category: 'PERSON', subcategory: 'Bob Jones'},
     {category: 'PLACE', subcategory: 'Washington'},
     {category: 'PERSON', subcategory: 'Mary'},
     {category: 'COMPUTER', subcategory: 'Mac'},
